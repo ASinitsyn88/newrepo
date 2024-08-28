@@ -3,6 +3,7 @@ package com.example.book.auth;
 import com.example.book.email.EmailService;
 import com.example.book.email.EmailTemplateName;
 import com.example.book.role.RoleRepository;
+import com.example.book.security.JwtService;
 import com.example.book.user.Token;
 import com.example.book.user.TokenRepository;
 import com.example.book.user.User;
@@ -10,25 +11,30 @@ import com.example.book.user.UserRepository;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
 
+    private final JwtService jwtService;
     private final EmailService emailService;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenRepository tokenRepository;
+    private final AuthenticationManager authenticationManager;
     @Value("${application.mailing.frontend.activation-url}")
     private String activationUrl;
 
-    public void register(RegisterRequest request) throws MessagingException {
+    public void register(RegistrationRequest request) throws MessagingException {
         // TODO - add better exception handling
         var userRole = roleRepository.findByName("USER").orElseThrow(() -> new IllegalStateException("ROLE USER was not initialized"));
         var user = User.builder()
@@ -77,5 +83,14 @@ public class AuthenticationService {
             codeBuilder.append(characters.charAt(randomIndex));
         }
         return codeBuilder.toString();
+    }
+
+    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+        var auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+        var claims = new HashMap<String, Object>();
+        var user = ((User) auth.getPrincipal());
+        claims.put("fullName", user.fullName());
+        var jwtToken = jwtService.generateToken(claims, user);
+        return AuthenticationResponse.builder().token(jwtToken).build();
     }
 }
