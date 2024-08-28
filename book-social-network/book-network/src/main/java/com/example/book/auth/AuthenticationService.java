@@ -13,8 +13,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -47,17 +49,18 @@ public class AuthenticationService {
                 .roles(List.of(userRole))
                 .build();
         userRepository.save(user);
-        sendValidationEmail(user);
+        var activationToken = generateAndSaveActivationToken(user);
+        sendValidationEmail(user, activationToken);
     }
 
-    private void sendValidationEmail(User user) throws MessagingException {
-        var newToken = generateAndSaveActivationToken(user);
+    private void sendValidationEmail(User user, String activationToken) throws MessagingException {
+        //var newToken = generateAndSaveActivationToken(user);
         emailService.sendEmail(
                 user.getEmail(),
                 user.fullName(),
                 EmailTemplateName.ACTIVATE_ACCOUNT,
                 activationUrl,
-                newToken,
+                activationToken,
                 "Account activation");
     }
 
@@ -83,6 +86,22 @@ public class AuthenticationService {
             codeBuilder.append(characters.charAt(randomIndex));
         }
         return codeBuilder.toString();
+    }
+
+    @Transactional
+    public void activateAccount(String token) throws MessagingException {
+        // TODO exception has to be defined
+        Token savedToken = tokenRepository.findByToken(token).orElseThrow(() -> new RuntimeException("Invalid token"));
+        if (LocalDateTime.now().isAfter(savedToken.getExpiresAt())) {
+            var activationToken = generateAndSaveActivationToken(savedToken.getUser());
+            sendValidationEmail(savedToken.getUser(), activationToken);
+            throw new RuntimeException("Activation token has expired. A new token has been sent to the same email address");
+        }
+        var user = userRepository.findById(savedToken.getUser().getId()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        user.setEnabled(true);
+        userRepository.save(user);
+        savedToken.setValidatedAt(LocalDateTime.now());
+        tokenRepository.save(savedToken);
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {

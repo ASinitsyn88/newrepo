@@ -5,6 +5,18 @@ Content-Type: application/json
 {
   "firstname": "Alexander",
   "lastname": "Sinitsyn",
-  "email": "sinitsyn88@gmail.com",
+  "email": "example@gmail.com",
+  "password": "password1"
+}
+
+### Activate account
+GET http://localhost:8088/api/v1/auth/activate-account?token=681527
+
+### Authenticate
+POST http://localhost:8088/api/v1/auth/authenticate
+Content-Type: application/json
+
+{
+  "email": "example@gmail.com",
   "password": "password1"
 }

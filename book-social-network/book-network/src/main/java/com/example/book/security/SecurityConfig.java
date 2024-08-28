@@ -80,5 +80,6 @@ public class SecurityConfig {
                 // execute this filter before the filter called username/password authentication
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
+        // TODO add logout logic (see: training project)
     }
 }
