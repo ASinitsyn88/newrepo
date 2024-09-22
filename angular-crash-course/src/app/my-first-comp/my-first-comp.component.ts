@@ -7,4 +7,14 @@ import { Component } from '@angular/core';
 })
 export class MyFirstCompComponent {
 
+  // These variables store the data from the .html page
+  name: string = '';
+  email: string = '';
+  message: string = '';
+  isSubmitted: boolean = false;
+
+  onSubmit() {
+    // It defines submit logic
+    this.isSubmitted = true;
+  }
 }
