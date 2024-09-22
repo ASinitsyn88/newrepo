@@ -12,9 +12,17 @@ export class MyFirstCompComponent {
   email: string = '';
   message: string = '';
   isSubmitted: boolean = false;
+  // Table will be rendered using this data
+  messages: Array<any> = [];
 
+  // It defines submit logic
   onSubmit() {
-    // It defines submit logic
     this.isSubmitted = true;
+    this.messages.push({
+      'name': this.name,
+      'email': this.email,
+      'message': this.message
+    });
+    console.log(this.messages);
   }
 }
