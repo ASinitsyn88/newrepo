@@ -1,8 +1,9 @@
 # AngularCrashCourse
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.3.
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.3.  
+https://www.youtube.com/watch?v=VTEDh2pNSBQ&list=WL&index=1
 
-## Development server
+## Development server (run the project)
 
 Go to the root project directory and run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
