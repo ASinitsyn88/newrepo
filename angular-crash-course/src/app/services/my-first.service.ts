@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 
 // Injectable decorator says it's a service and it might be injected
-@Injectable({
+@Injectable(//{
   // root - it's available at root level as Singleton
   // any - you can use this service anywhere in the application
   // SomeModule - you can specify custom module name to provide the service into it
   // null - disables automatic dependency injection
-  providedIn: 'root'
-})
+  //providedIn: 'root'
+//}
+)
 export class MyFirstService {
 
   messages: Array<any> = [];
