@@ -16,9 +16,9 @@ export class AboutComponent implements OnInit {
 
   ngOnInit(): void {
     console.log(this.activatedRoute);
-    // Example: http://localhost:4200/about/Alex
+    // Example of reading URL parameter: http://localhost:4200/about/Alex
     this.param = this.activatedRoute.snapshot.params['username'];
-    // Example: http://localhost:4200/about?course=spring
+    // Example of reading URL query parameter: http://localhost:4200/about?course=spring
     this.queryParam = this.activatedRoute.snapshot.queryParams['course']
   }
 }
