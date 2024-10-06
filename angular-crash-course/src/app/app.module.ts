@@ -8,7 +8,7 @@ import { MessageDetailsComponent } from "./message-details/message-details.compo
 import { MyFirstService } from "./services/my-first.service";
 import { MenuComponent } from "./menu/menu.component";
 import { AboutComponent } from "./about/about.component";
-import {provideHttpClient, withFetch } from "@angular/common/http";
+import { provideHttpClient, withFetch } from "@angular/common/http";
 
 @NgModule({
   // Need to declare new modules here
