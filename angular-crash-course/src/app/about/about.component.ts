@@ -39,7 +39,7 @@ export class AboutComponent implements OnInit {
       },
       error: (error: HttpErrorResponse) => {
         if (error instanceof ErrorEvent) {
-          console.error('An error occurred:', error.error.message)
+          console.error('An error occurred:', error)
         } else {
           // server side error
           console.error(`Server returned status code ${error.status}, error message: ${error.message}`);
