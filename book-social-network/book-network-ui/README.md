@@ -30,4 +30,5 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 Additionally the following components were installed:  
 npm i bootstrap@5.3.3  
 npm install --save @fortawesome/fontawesome-free
-npm i ng-openapi-gen
+npm i ng-openapi-gen  
+npm i angular-code-input
